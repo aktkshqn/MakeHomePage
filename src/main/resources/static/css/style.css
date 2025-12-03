@@ -1,0 +1,21 @@
+body {
+background-color: #2b1f6d;
+text-align: center;
+font-family: monospace;
+}
+h1{
+    color:#efc571;
+    font-size: 48px;
+    font-family: sans-serif;
+}
+h2{
+    color: #ebc67c;
+    font-size: 36px;
+    font-family: cursive;
+}
+h3,p{
+color: #ebc67c;
+}
+h4{
+    color: white;
+}
