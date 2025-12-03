@@ -1,4 +1,4 @@
 "use-strict";
 window.addEventListener('DOMContentLoaded',()=>{
-    console.log("it's loaded");  
+    console.log("JavaScript is worked");  
 });
