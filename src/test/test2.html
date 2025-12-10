@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>クリスマス感謝祭 | 郡山家庭教会</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- 背景パーティクル用Canvas -->
+  <canvas id="particle-canvas" aria-hidden="true"></canvas>
+
+  <!-- 装飾SVG（左上スターなど） -->
+  <svg class="decor-svg" aria-hidden="true" width="0" height="0">
+    <!-- ここにシンボルを定義 -->
+    <symbol id="icon-bell" viewBox="0 0 24 24">
+      <path d="M12 22a2 2 0 0 0 2-2H10a2 2 0 0 0 2 2z"></path>
+      <path d="M18 8a6 6 0 10-12 0v5l-2 2v1h16v-1l-2-2V8z"></path>
+    </symbol>
+    <symbol id="icon-star" viewBox="0 0 24 24">
+      <path d="M12 .587l3.668 7.431L23.6 9.753l-5.8 5.657L19.335 24 12 19.897 4.665 24l1.535-8.59L.4 9.753l7.932-1.735L12 .587z"/>
+    </symbol>
+  </svg>
+
+  <header class="hero" id="hero">
+    <!-- SVGリボン（アニメーション） -->
+    <div class="ribbon-wrap" aria-hidden="true">
+      <svg class="ribbon" width="220" height="80" viewBox="0 0 220 80" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <linearGradient id="g-gold" x1="0" x2="1">
+            <stop offset="0%" stop-color="#ffe8a6"/>
+            <stop offset="100%" stop-color="#ffd36b"/>
+          </linearGradient>
+        </defs>
+        <g class="ribbon-group">
+          <path class="ribbon-left" d="M20 40 C40 25, 60 25, 80 40 L60 50 C40 60, 30 60, 20 50 Z" fill="url(#g-gold)" stroke="#d7a93a" stroke-width="1"/>
+          <path class="ribbon-right" d="M200 40 C180 25, 160 25, 140 40 L160 50 C180 60, 190 60, 200 50 Z" fill="url(#g-gold)" stroke="#d7a93a" stroke-width="1"/>
+          <circle cx="110" cy="40" r="20" fill="url(#g-gold)" stroke="#d7a93a" stroke-width="1"/>
+          <path class="ribbon-knot" d="M95 36 Q110 20 125 36 Q110 48 95 36 Z" fill="#ffebe0" opacity="0.85"/>
+        </g>
+      </svg>
+    </div>
+
+    <h1 class="title">クリスマス感謝祭</span></h1>
+    <p class="church">郡山家庭教会</p>
+    <p class="lead">クリスマスパーティーのご案内</p>
+    <p class="lead-sub">今年もクリスマスパーティーを開催します♪<br>ダンス・シールラリー・出し物が盛りだくさん！</p>
+
+    <!-- ベルボタン -->
+    <button id="bell-btn" class="bell-btn" aria-pressed="false" aria-label="ベルを鳴らす">
+      <svg class="bell-icon" width="28" height="28" viewBox="0 0 24 24" aria-hidden="true">
+        <use href="#icon-bell"></use>
+      </svg>
+      <span class="bell-text">ベルを鳴らす</span>
+    </button>
+  </header>
+
+  <main>
+    <!-- 日付セクション -->
+    <section class="date-section reveal-on-scroll">
+      <div class="date-card">
+        <h2 class="date">12月21日<small>日</small></h2>
+        <p class="time">一部 10:00〜 記念礼拝<br>二部 11:00〜 感謝祭</p>
+      </div>
+    </section>
+
+    <!-- シールラリー（SVGアイコンとグリッド）-->
+    <section class="seal-section reveal-on-scroll">
+      <div class="panel">
+        <h3 class="section-title">シールラリー</h3>
+        <p class="note">全部揃えると景品もらえる！</p>
+
+        <div class="seal-grid">
+          <div class="seal-item">
+            <div class="si-label">焼鳥</div>
+            <div class="si-sub">玄関外</div>
+          </div>
+          <div class="seal-item">
+            <div class="si-label">チヂミ</div>
+            <div class="si-sub">玄関外</div>
+          </div>
+          <div class="seal-item">
+            <div class="si-label">おにぎり</div>
+            <div class="si-sub">第一講義室</div>
+          </div>
+          <div class="seal-item">
+            <div class="si-label">ナゲット</div>
+            <div class="si-sub">第二講義室</div>
+          </div>
+          <div class="seal-item">
+            <div class="si-label">パネル展</div>
+            <div class="si-sub">第三講義室</div>
+          </div>
+          <div class="seal-item">
+            <div class="si-label">ケーキ</div>
+            <div class="si-sub">カフェ</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 出し物 -->
+    <section class="program-section reveal-on-scroll">
+      <div class="panel">
+        <h3 class="section-title">【出し物】</h3>
+        <ul class="program-list">
+          <li>聖歌隊</li>
+          <li>活動動画</li>
+          <li>ダンス</li>
+          <li>バンド</li>
+          <li>その他出し物</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 地図 & ポスター -->
+    <section class="access-section reveal-on-scroll">
+      <div class="panel access-grid">
+        <div class="map-wrap">
+          <h3 class="section-title">アクセス</h3>
+          <img src="map-placeholder.png" alt="地図（サンプル）" class="map-img" onerror="this.style.display='none'">
+          <p class="addr">住所：郡山市大槻町堀切西11-3<br>TEL：024-927-1670</p>
+        </div>
+        <div class="poster-wrap" aria-hidden="true">
+          <!-- 元チラシ画像がある場合に表示 -->
+          <img src="poster_br.jpg" alt="イベントチラシ" class="poster" onerror="this.style.display='none'">
+          <!-- SVGツリー（装飾） -->
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <p>主催：世界平和統一家庭連合 郡山家庭教会</p>
+    <p class="subtle"></p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
