@@ -3,10 +3,10 @@ background-color: #2b1f6d;
 text-align: center;
 font-family: monospace;
 }
-h1{
+h1 {
     color:#efc571;
-    font-size: 48px;
-    font-family: sans-serif;
+    font-size: 45px;
+    font-family: "源暎きわみゴ",'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
 h2{
     color: #ebc67c;
@@ -15,10 +15,12 @@ h2{
 }
 h3,p{
 color: #ebc67c;
+    font-family: Arial, sans-serif;
 }
 h4{
     color: white;
+    font-family: Arial, sans-serif;
 }
-.popup{
-    
+.big{
+    font-size: 68px;
 }
