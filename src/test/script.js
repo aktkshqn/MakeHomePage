@@ -35,7 +35,7 @@
       this.vx = rand(-0.2, 0.2);
       this.vy = this.speed + rand(0.1, 0.8);
       this.alpha = rand(0.3, 0.95);
-      this.hue = rand(40, 60); // ゴールド系
+      this.hue = rand(40,60); // 白色
       this.life = rand(60, 240);
       this.age = 0;
       this.type = Math.random() > 0.85 ? 'spark' : 'soft';
