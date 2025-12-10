@@ -19,7 +19,7 @@
 
   // パーティクル配列
   const particles = [];
-  const particleCount = Math.max(60, Math.floor((W * H) / 12000)); // デバイスに応じて数調整
+  const particleCount = Math.max(10, Math.floor((W * H) / 12000)); // デバイスに応じて数調整
 
   function rand(min, max) { return Math.random() * (max - min) + min; }
 
@@ -30,7 +30,7 @@
     reset() {
       this.x = rand(0, W);
       this.y = rand(-H * 0.4, H);
-      this.size = rand(1.4, 4.6);
+      this.size = rand(1.4, 2.3);
       this.speed = rand(0.1, 0.9);
       this.vx = rand(-0.2, 0.2);
       this.vy = this.speed + rand(0.1, 0.8);
