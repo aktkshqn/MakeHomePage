@@ -11,10 +11,6 @@ body {
   overflow-x: hidden;
 }
 
-h1{
-  font-size: 100px;
-}
-
 /* パーティクル Canvas は常に背面に */
 #particle-canvas {
   position: fixed;
@@ -41,7 +37,7 @@ main { position: relative; z-index: 2; padding: 30px 18px 80px; }
 @keyframes ribbonSwing { 0% { transform: rotate(0deg);} 50% { transform: rotate(-3deg);} 100% { transform: rotate(0deg);} }
 
 .title {
-  font-size: clamp(28px, 5vw, 44px);
+  font-size: clamp(40px, 5vw, 60px);
   letter-spacing: 1px;
   margin: 6px 0 4px;
   font-weight: 700;
