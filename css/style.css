@@ -143,19 +143,24 @@ img {
 .menu-open .menu-btn span:nth-child(2) { opacity: 0; }
 .menu-open .menu-btn span:nth-child(3) { transform: rotate(-45deg); top: 19px; }
 
-/* フルスクリーンメニュー */
+/* =========================================
+   Navigation Overlay & Animation (Revised)
+   ========================================= */
+
+/* オーバーレイ背景 */
 .nav-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(18, 19, 56, 0.98); /* 背景よりさらに少し濃く */
+    background: rgba(18, 19, 56, 0.98);
     z-index: 999;
     display: flex;
     justify-content: center;
-    align-items: flex-start;
-    padding-top: 100px;
+    /* 上端揃えにして、margin-topで段差を作る */
+    align-items: flex-start; 
+    padding-top: 120px; /* ヘッダー分 + 余白 */
     pointer-events: none;
     opacity: 0;
     transition: opacity 0.5s;
@@ -166,62 +171,98 @@ img {
     opacity: 1;
 }
 
+/* リストコンテナ */
 .nav-list {
     display: flex;
-    gap: 20px;
+    gap: 20px; /* 横の間隔 */
+    justify-content: center;
 }
 
+/* 個別のアイテムエリア（位置調整用） */
 .nav-item {
     position: relative;
-    text-align: center;
     width: 80px;
+    text-align: center;
 }
 
-/* 紐 (String) */
-.nav-item::before {
-    content: '';
-    position: absolute;
-    top: -1000px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 1px; /* 紐を少し細く */
-    height: 1000px;
-    background: linear-gradient(to bottom, transparent, var(--c-gold));
-    transition: top 0.8s var(--easing);
-}
+/* 
+   紐の長さ（段差）の演出 
+   PC表示: 綺麗な右肩下がり（階段状）
+*/
+.nav-item:nth-child(1) { margin-top: 0px; }
+.nav-item:nth-child(2) { margin-top: 50px; }
+.nav-item:nth-child(3) { margin-top: 100px; }
+.nav-item:nth-child(4) { margin-top: 150px; }
+.nav-item:nth-child(5) { margin-top: 200px; }
 
+/* リンク本体（動く部分） */
 .nav-link {
     display: flex;
-    position: relative;
-    top: -100vh;
-    transition: top 0.8s var(--easing);
-    flex-direction: column;
+    flex-direction: column; /* 縦並び (テキスト→アイコン) */
     align-items: center;
+    position: relative;
+    text-decoration: none;
+    
+    /* 初期状態: 画面の遥か上に隠す */
+    transform: translateY(-150vh);
+    transition: transform 1s var(--easing); /* バウンス効果 */
 }
 
-.nav-icon {
-    width: 50px;
-    height: auto;
-    margin-bottom: 10px;
-    filter: drop-shadow(0 0 5px var(--c-gold));
+/* 紐 (String) - リンクの上部から天井へ伸びる */
+.nav-link::before {
+    content: '';
+    position: absolute;
+    bottom: 100%; /* コンテンツの真上から開始 */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 1px;
+    height: 200vh; /* 十分な長さを確保 */
+    background: linear-gradient(to bottom, transparent 20%, var(--c-gold) 100%);
+    opacity: 0.6;
 }
 
+/* テキストスタイル (横書き) */
 .nav-text {
-    font-size: 0.9rem;
-    color: var(--c-white);
-    writing-mode: vertical-rl;
-    text-orientation: upright;
-    letter-spacing: 0.3em;
+    font-size: 1rem;
+    color: var(--c-gold);
+    letter-spacing: 0.1em;
+    font-weight: 500;
+    margin-bottom: 15px; /* 紐とアイコンの間隔 */
+    writing-mode: horizontal-tb; /* 横書き指定 */
+    text-shadow: 0 0 5px rgba(212, 175, 55, 0.5);
 }
 
-.menu-open .nav-item::before { top: -850px; }
-.menu-open .nav-link { top: 0; }
+/* アイコンスタイル */
+.nav-icon {
+    width: 50px; /* 必要に応じてサイズ調整 */
+    height: auto;
+    filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.6));
+    transition: transform 0.3s;
+}
 
-.nav-item:nth-child(1) .nav-link, .nav-item:nth-child(1)::before { transition-delay: 0.1s; }
-.nav-item:nth-child(2) .nav-link, .nav-item:nth-child(2)::before { transition-delay: 0.2s; }
-.nav-item:nth-child(3) .nav-link, .nav-item:nth-child(3)::before { transition-delay: 0.3s; }
-.nav-item:nth-child(4) .nav-link, .nav-item:nth-child(4)::before { transition-delay: 0.4s; }
-.nav-item:nth-child(5) .nav-link, .nav-item:nth-child(5)::before { transition-delay: 0.5s; }
+/* ホバー時の動き */
+.nav-link:hover .nav-icon {
+    transform: scale(1.1) rotate(5deg);
+}
+.nav-link:hover .nav-text {
+    color: var(--c-white);
+}
+
+/* =========================================
+   Animation Triggers (Open State)
+   ========================================= */
+
+/* メニューが開いた時、定位置まで降りてくる */
+.menu-open .nav-link {
+    transform: translateY(0);
+}
+
+/* アニメーションの遅延 (左から順にパラパラと) */
+.nav-item:nth-child(1) .nav-link { transition-delay: 0.05s; }
+.nav-item:nth-child(2) .nav-link { transition-delay: 0.15s; }
+.nav-item:nth-child(3) .nav-link { transition-delay: 0.25s; }
+.nav-item:nth-child(4) .nav-link { transition-delay: 0.35s; }
+.nav-item:nth-child(5) .nav-link { transition-delay: 0.45s; }
 
 /* =========================================
    Hero Section
@@ -528,13 +569,31 @@ img {
 /* スマホ用調整 */
 @media (max-width: 768px) {
     .nav-list {
-        flex-direction: row; 
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 10px;
+        flex-wrap: wrap; /* 2列などで折り返す */
+        gap: 15px;
+        width: 100%;
+        max-width: 350px; /* スマホでの横幅制限 */
     }
+
     .nav-item {
-        width: 60px;
+        width: 45%; /* 2列並びにする */
+    }
+
+    /* 
+       スマホでは段差が大きすぎると見づらいため、
+       交互に高さが変わる「ジグザグ」配置に変更 
+    */
+    .nav-item:nth-child(odd) { margin-top: 0px; }
+    .nav-item:nth-child(even) { margin-top: 60px; }
+
+    /* スマホ用に余白調整 */
+    .nav-overlay {
+        padding-top: 100px;
+        overflow-y: auto; /* 画面からはみ出る場合のスクロール */
+    }
+    
+    .nav-text {
+        font-size: 0.9rem;
     }
     .hero-title {
         margin-bottom: 30px;
