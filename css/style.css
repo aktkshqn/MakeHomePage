@@ -1,185 +1,545 @@
-/* --- ベース設定 --- */
-html {
-    scroll-behavior: smooth; /* リンククリック時にスルッと移動 */
+/* =========================================
+   Variables & Reset
+   ========================================= */
+:root {
+    --c-navy: #1a1b4b;
+    --c-navy-dark: #121338;
+    --c-gold: #d4af37;
+    --c-gold-fade: rgba(212, 175, 55, 0.3);
+    --c-red: #8a1c1c;
+    --c-white: #ffffff;
+    --font-main: 'Noto Serif JP', serif;
+    --easing: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
-body {
-    background-color: #1a237e; /* 夜空の青 */
-    color: #fff;
-    font-family: 'M PLUS Rounded 1c', sans-serif;
+
+*, *::before, *::after {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background-color: var(--c-navy);
+    color: var(--c-white);
+    font-family: var(--font-main);
+    line-height: 1.8;
     overflow-x: hidden;
-}
-
-/* --- ナビゲーション（吊り飾り） --- */
-.hanging-nav {
     position: relative;
-    width: 100%;
-    max-width: 600px; /* スマホ想定の最大幅 */
-    margin: 0 auto;
-    z-index: 100;
 }
 
-.nav-container {
-    position: relative; /* 基準点 */
-    width: 100%;
+a {
+    text-decoration: none;
+    color: inherit;
+    transition: opacity 0.3s;
 }
 
-.nav-bg-img {
-    width: 100%;
+ul {
+    list-style: none;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
     display: block;
-    /* 画像自体の色味調整（必要であれば） */
-    filter: drop-shadow(0 5px 10px rgba(0,0,0,0.3)); 
 }
 
-/* 透明なリンクボタン共通設定 */
-.nav-item {
+/* =========================================
+   Background Elements (Stars & Fixed Assets)
+   ========================================= */
+#bg-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.star {
     position: absolute;
+    /* 星の明るさを控えめに調整 (0.2 -> 0.6 程度) */
+    opacity: 0;
+    animation: twinkle infinite ease-in-out;
+}
+
+@keyframes twinkle {
+    0% { opacity: 0.1; transform: scale(0.8); }
+    50% { opacity: 0.6; transform: scale(1.2); } /* 最大でも0.6まで */
+    100% { opacity: 0.1; transform: scale(0.8); }
+}
+
+/* 固定配置のアセット (ソリとツリー) */
+.fixed-asset {
+    position: fixed;
+    opacity: 0.15; /* 邪魔にならない薄さ */
+    z-index: -1;
+    transition: transform 0.2s ease-out;
+}
+.asset-sled { bottom: 5%; left: -50px; width: 300px; }
+.asset-tree { bottom: 0; right: -50px; width: 250px; }
+
+@media (min-width: 768px) {
+    .asset-sled { width: 500px; left: 0; }
+    .asset-tree { width: 400px; right: 0; }
+}
+
+/* =========================================
+   Header & Navigation
+   ========================================= */
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 70px; /* 高さを固定してバーらしくする */
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1000;
+    
+    /* ロゴを見やすくするための背景バー設定 */
+    background-color: rgba(26, 27, 75, 0.9); /* 濃いネイビーの透過 */
+    backdrop-filter: blur(5px); /* すりガラス効果 */
+    border-bottom: 1px solid var(--c-gold-fade); /* 下線で引き締める */
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}
+
+.logo {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--c-gold);
+    letter-spacing: 0.1em;
+}
+
+/* ハンバーガーボタン */
+.menu-btn {
+    width: 40px;
+    height: 40px;
+    position: relative;
+    cursor: pointer;
+    z-index: 1001;
+}
+.menu-btn span {
+    display: block;
+    position: absolute;
+    height: 2px;
+    width: 100%;
+    background: var(--c-gold);
+    border-radius: 2px;
+    transition: all 0.4s var(--easing);
+}
+.menu-btn span:nth-child(1) { top: 10px; }
+.menu-btn span:nth-child(2) { top: 19px; }
+.menu-btn span:nth-child(3) { top: 28px; }
+
+.menu-open .menu-btn span:nth-child(1) { transform: rotate(45deg); top: 19px; }
+.menu-open .menu-btn span:nth-child(2) { opacity: 0; }
+.menu-open .menu-btn span:nth-child(3) { transform: rotate(-45deg); top: 19px; }
+
+/* フルスクリーンメニュー */
+.nav-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(18, 19, 56, 0.98); /* 背景よりさらに少し濃く */
+    z-index: 999;
     display: flex;
     justify-content: center;
-    align-items: flex-end; /* ラベルを下寄せ */
-    text-decoration: none;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* バネのような動き */
-    
-    /* 開発中の確認用（完成したら background を transparent にする） */
-    background: rgba(255, 255, 255, 0.0); 
-    border-radius: 50%;
-}
-
-/* ホバー時の動き */
-.nav-item:hover, .nav-item:active {
-    transform: scale(1.15) translateY(5px); /* 少し大きくなって手前に来る感じ */
-    filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.8)); /* 金色に光る */
-}
-/* タッチした瞬間に白く光らせる */
-.nav-item:active {
-    background: rgba(255, 255, 255, 0.2);
-}
-
-/* 位置調整 (画像の配置に合わせて % で指定) */
-/* 左のプレゼント箱 */
-.item-1 {
-    top: 30%; left: 8%;
-    width: 18%; height: 25%;
-}
-/* 真ん中のツリー・星エリア */
-.item-2 {
-    top: 45%; left: 28%;
-    width: 25%; height: 35%;
-}
-/* 右のプレゼント箱 */
-.item-3 {
-    top: 60%; left: 58%;
-    width: 16%; height: 20%;
-}
-/* 右端のオーナメント */
-.item-4 {
-    top: 40%; left: 75%;
-    width: 18%; height: 25%;
-}
-
-/* ラベル文字（TOP, MAPなど） */
-.nav-label {
-    font-size: 0.7rem;
-    font-weight: 800;
-    color: #fff;
-    background: rgba(0,0,0,0.4);
-    padding: 2px 6px;
-    border-radius: 4px;
-    margin-bottom: -20px; /* 画像の下にはみ出させる */
-    opacity: 0.9;
-}
-
-
-/* --- メインコンテンツ --- */
-.main-content {
-    max-width: 600px;
-    margin: 20px auto 100px;
-    padding: 0 20px;
-}
-
-/* スクロールフェードインの仕掛け */
-.fade-block {
+    align-items: flex-start;
+    padding-top: 100px;
+    pointer-events: none;
     opacity: 0;
-    transform: translateY(30px); /* 最初は少し下にいる */
-    transition: opacity 1s ease, transform 1s ease;
+    transition: opacity 0.5s;
 }
-/* JSでこのクラスが付くと見えるようになる */
-.fade-block.visible {
+
+.menu-open .nav-overlay {
+    pointer-events: auto;
     opacity: 1;
-    transform: translateY(0);
 }
 
+.nav-list {
+    display: flex;
+    gap: 20px;
+}
 
-/* --- 各セクションのデザイン --- */
-.section-block {
-    margin-bottom: 60px;
-    padding: 20px;
-    background: rgba(255, 255, 255, 0.05); /* ガラスのような薄い背景 */
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 16px;
+.nav-item {
+    position: relative;
     text-align: center;
+    width: 80px;
 }
 
-.section-title {
-    color: #ffd54f; /* ゴールド */
-    border-bottom: 2px dashed rgba(255, 255, 255, 0.3);
-    padding-bottom: 10px;
-    margin-bottom: 20px;
+/* 紐 (String) */
+.nav-item::before {
+    content: '';
+    position: absolute;
+    top: -1000px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 1px; /* 紐を少し細く */
+    height: 1000px;
+    background: linear-gradient(to bottom, transparent, var(--c-gold));
+    transition: top 0.8s var(--easing);
 }
 
-/* トップエリア */
-.main-title {
-    font-size: 2.5rem;
-    color: #ffd54f;
-    line-height: 1.2;
-    text-shadow: 0 4px 10px rgba(0,0,0,0.5);
-}
-.date-badge {
-    font-size: 1.5rem;
-    font-weight: bold;
-    background: #c62828;
-    display: inline-block;
-    padding: 5px 20px;
-    border-radius: 30px;
-    margin: 10px 0;
-    box-shadow: 0 4px 0 #8e0000;
+.nav-link {
+    display: flex;
+    position: relative;
+    top: -100vh;
+    transition: top 0.8s var(--easing);
+    flex-direction: column;
+    align-items: center;
 }
 
-/* ブースグリッド */
-.stall-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-    margin-top: 15px;
+.nav-icon {
+    width: 50px;
+    height: auto;
+    margin-bottom: 10px;
+    filter: drop-shadow(0 0 5px var(--c-gold));
 }
-.stall-item {
-    background: #fff;
-    color: #1a237e;
-    font-weight: bold;
-    padding: 10px 5px;
-    border-radius: 8px;
+
+.nav-text {
     font-size: 0.9rem;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    color: var(--c-white);
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+    letter-spacing: 0.3em;
 }
 
-/* プレースホルダー（フォーム・マップ） */
-.form-placeholder, .map-placeholder {
-    background: #eee;
-    color: #333;
-    height: 200px;
+.menu-open .nav-item::before { top: -850px; }
+.menu-open .nav-link { top: 0; }
+
+.nav-item:nth-child(1) .nav-link, .nav-item:nth-child(1)::before { transition-delay: 0.1s; }
+.nav-item:nth-child(2) .nav-link, .nav-item:nth-child(2)::before { transition-delay: 0.2s; }
+.nav-item:nth-child(3) .nav-link, .nav-item:nth-child(3)::before { transition-delay: 0.3s; }
+.nav-item:nth-child(4) .nav-link, .nav-item:nth-child(4)::before { transition-delay: 0.4s; }
+.nav-item:nth-child(5) .nav-link, .nav-item:nth-child(5)::before { transition-delay: 0.5s; }
+
+/* =========================================
+   Hero Section
+   ========================================= */
+.hero {
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    border-radius: 8px;
-}
-.map-placeholder { height: 250px; }
-
-footer {
     text-align: center;
-    padding: 20px;
+    position: relative;
+    padding: 100px 20px 20px; /* ヘッダー分空ける */
+}
+
+.hero-title {
+    font-size: clamp(2.5rem, 8vw, 5rem);
+    color: var(--c-gold);
+    margin-bottom: 20px;
+    text-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+    line-height: 1.3;
+}
+
+.hero-date {
+    font-size: clamp(1.2rem, 4vw, 2rem);
+    letter-spacing: 0.2em;
+    border-top: 1px solid var(--c-gold);
+    border-bottom: 1px solid var(--c-gold);
+    padding: 10px 40px;
+    margin-top: 10px;
+}
+
+.hero-decoration {
+    margin-top: 40px;
+}
+
+.bar-img {
+    width: 150px;
+    opacity: 0.8;
+}
+
+.scroll-down {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
     font-size: 0.8rem;
     opacity: 0.7;
+    animation: bounce 2s infinite;
+}
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {transform: translateX(-50%) translateY(0);}
+    40% {transform: translateX(-50%) translateY(-10px);}
+    60% {transform: translateX(-50%) translateY(-5px);}
+}
+
+/* =========================================
+   Common Layout & Animation
+   ========================================= */
+.container {
+    width: 90%;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 80px 0;
+}
+
+.section-title {
+    text-align: center;
+    font-size: 2.5rem;
+    color: var(--c-gold);
+    margin-bottom: 5px;
+}
+
+.section-desc {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 1rem;
+    color: #ddd; /* 白すぎると眩しいので少し落とす */
+}
+
+.title-decoration {
+    display: block;
+    margin: 0 auto 50px;
+    width: 180px;
+    height: auto;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 1s ease-out;
+}
+
+.fade-in-up {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s ease-out;
+}
+
+.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* =========================================
+   About Section
+   ========================================= */
+.about-text {
+    text-align: center;
+    font-size: 1.1rem;
+    line-height: 2.4; /* 文字を読みやすく行間を広げる */
+    max-width: 700px;
+    margin: 0 auto;
+    text-shadow: 1px 1px 2px var(--c-navy-dark); /* 背景と混ざらないよう影追加 */
+}
+
+/* =========================================
+   Sticker Rally (Gift Cards)
+   ========================================= */
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
+}
+
+.gift-card {
+    background: rgba(255, 255, 255, 0.05); /* 背景を少し濃く */
+    border: 1px solid var(--c-gold);
+    aspect-ratio: 1 / 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    transition: all 0.4s ease;
+    cursor: default;
+    backdrop-filter: blur(2px); /* 星が透けすぎないように */
+}
+
+.gift-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 50%;
+    width: 1px; height: 100%;
+    background: var(--c-gold-fade);
+    transform: translateX(-50%);
+    z-index: 0;
+}
+.gift-card::after {
+    content: '';
+    position: absolute;
+    top: 50%; left: 0;
+    width: 100%; height: 1px;
+    background: var(--c-gold-fade);
+    transform: translateY(-50%);
+    z-index: 0;
+}
+
+.gift-card h3 {
+    font-size: 1.5rem;
+    z-index: 1;
+    margin-bottom: 10px;
+    font-weight: 500;
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
+}
+
+.gift-card p {
+    font-size: 0.95rem;
+    color: #ccc;
+    z-index: 1;
+    font-weight: 300;
+}
+
+.gift-card:hover {
+    background: var(--c-gold);
+    transform: translateY(-10px);
+    box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
+}
+
+.gift-card:hover h3, 
+.gift-card:hover p {
+    color: var(--c-navy);
+    text-shadow: none;
+}
+
+.gift-card:hover::before,
+.gift-card:hover::after {
+    background: rgba(26, 27, 75, 0.2);
+}
+
+/* =========================================
+   Performers & List
+   ========================================= */
+.performers-list {
+    text-align: center;
+    border: 1px solid var(--c-gold);
+    padding: 40px;
+    position: relative;
+    background: rgba(26, 27, 75, 0.3); /* 背景を少し暗くして文字を見やすく */
+}
+.performers-list::before {
+    content: 'Program';
+    position: absolute;
+    top: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--c-navy);
+    padding: 0 20px;
+    color: var(--c-gold);
+    font-size: 0.9rem;
+    letter-spacing: 0.1em;
+}
+.performers-list li {
+    margin: 15px 0;
+    font-size: 1.2rem;
+    border-bottom: 1px dotted rgba(255,255,255,0.2);
+    padding-bottom: 10px;
+}
+.performers-list li:last-child {
+    border-bottom: none;
+}
+
+/* =========================================
+   Access & Contact
+   ========================================= */
+.embed-wrapper {
+    position: relative;
+    width: 100%;
+    border: 1px solid var(--c-gold);
+    padding: 10px;
+    background: rgba(255,255,255,0.05);
+    margin-bottom: 20px;
+}
+
+.embed-wrapper iframe {
+    width: 100%;
+    min-height: 400px;
+    border: none;
+    /* 地図やフォームが明るすぎないよう少しトーンダウン */
+    filter: opacity(0.9);
+}
+
+.address-text {
+    text-align: center;
+    margin-top: 10px;
+    line-height: 1.8;
+}
+
+.btn-wrapper {
+    text-align: center;
+    margin-top: 40px;
+}
+
+.btn-primary {
+    display: inline-block;
+    background-color: var(--c-red);
+    color: var(--c-white);
+    padding: 20px 60px;
+    border-radius: 50px;
+    font-size: 1.2rem;
+    letter-spacing: 0.1em;
+    box-shadow: 0 5px 15px rgba(138, 28, 28, 0.4);
+    transition: transform 0.3s, box-shadow 0.3s;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-primary::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(to bottom right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0) 100%);
+    transform: rotate(45deg) translateX(-100%);
+    transition: transform 0.6s;
+}
+
+.btn-primary:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 25px rgba(138, 28, 28, 0.6);
+}
+.btn-primary:hover::after {
+    transform: rotate(45deg) translateX(100%);
+}
+
+/* =========================================
+   Footer
+   ========================================= */
+.footer {
+    text-align: center;
+    padding: 60px 20px 40px;
+    margin-top: 40px;
+    font-size: 0.8rem;
+    color: #aaa;
+    position: relative;
+}
+
+.footer-decoration {
+    width: 100px;
+    margin: 0 auto 20px;
+    opacity: 0.5;
+}
+
+/* スマホ用調整 */
+@media (max-width: 768px) {
+    .nav-list {
+        flex-direction: row; 
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+    }
+    .nav-item {
+        width: 60px;
+    }
+    .hero-title {
+        margin-bottom: 30px;
+    }
+    .embed-wrapper iframe {
+        min-height: 300px;
+    }
 }
