@@ -1,146 +1,786 @@
 <!DOCTYPE html>
 <html lang="ja">
-
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale" />
-    <meta name="description"
-        content="2025年12月21日(日)、郡山家庭教会にてクリスマス感謝祭を開催！ダンスやバンド演奏、焼鳥・ケーキなどの屋台、子供も楽しめるシールラリーなどイベント盛りだくさん。どなたでもお気軽にご参加ください。">
-    <meta name="keywords" content="郡山,クリスマス,イベント,感謝祭,郡山家庭教会,旧統一教会,統一教会,家庭連合,大槻町,パーティー,家族連れ">
-    <meta name="robots" content="index, follow">
-    <meta property="og:title" content="【12/21開催】クリスマス感謝祭のご案内 - 郡山家庭教会">
-    <meta property="og:type" content="website">
-    <meta property="og:description" content="ダンス、バンド、おいしい屋台が盛りだくさん！シールラリーで景品もゲットしよう。参加申し込みはこちらから。">
-    <meta property="og:url" content="https://aktkshqn.github.io/MakeHomePage/">
-    <meta property="og:image" content="https://aktkshqn.github.io/MakeHomePage/images/poster.jpg">
-    <meta property="og:site_name" content="郡山家庭教会 クリスマス感謝祭2025">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="【12/21開催】クリスマス感謝祭のご案内">
-    <meta name="twitter:description" content="郡山家庭教会でクリスマスパーティー開催！誰でも参加OKです。">
-    <meta name="twitter:image" content="https://aktkshqn.github.io/MakeHomePage/images/poster.jpg">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>クリスマス感謝祭 | 郡山家庭教会</title>
-    <link href="css/style.css" rel="stylesheet" type="text/css">
+    <!-- Google Fonts: Noto Serif JP -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* =========================================
+           Variables & Reset
+           ========================================= */
+        :root {
+            --c-navy: #1a1b4b;
+            --c-navy-light: #25275e;
+            --c-gold: #d4af37;
+            --c-gold-light: #f3e5ab;
+            --c-red: #8a1c1c;
+            --c-white: #ffffff;
+            --font-main: 'Noto Serif JP', serif;
+            --easing: cubic-bezier(0.34, 1.56, 0.64, 1); /* バウンス用のイージング */
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--c-navy);
+            color: var(--c-white);
+            font-family: var(--font-main);
+            line-height: 1.8;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+            transition: opacity 0.3s;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* =========================================
+           Background Elements (Stars & Fixed Assets)
+           ========================================= */
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .star {
+            position: absolute;
+            opacity: 0;
+            animation: twinkle infinite ease-in-out;
+        }
+
+        @keyframes twinkle {
+            0% { opacity: 0.2; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); }
+            100% { opacity: 0.2; transform: scale(0.8); }
+        }
+
+        /* 固定配置のアセット (ソリとツリー) */
+        .fixed-asset {
+            position: fixed;
+            opacity: 0.15; /* 薄っすらと表示 */
+            z-index: -1;
+            transition: transform 0.2s ease-out;
+        }
+        .asset-sled { bottom: 5%; left: -50px; width: 300px; }
+        .asset-tree { bottom: 0; right: -50px; width: 250px; }
+
+        @media (min-width: 768px) {
+            .asset-sled { width: 500px; left: 0; }
+            .asset-tree { width: 400px; right: 0; }
+        }
+
+        /* =========================================
+           Header & Navigation
+           ========================================= */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            mix-blend-mode: exclusion; /* 背景に馴染ませる */
+        }
+
+        .logo {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--c-gold);
+            letter-spacing: 0.1em;
+        }
+
+        /* ハンバーガーボタン */
+        .menu-btn {
+            width: 40px;
+            height: 40px;
+            position: relative;
+            cursor: pointer;
+            z-index: 1001;
+        }
+        .menu-btn span {
+            display: block;
+            position: absolute;
+            height: 2px;
+            width: 100%;
+            background: var(--c-gold);
+            border-radius: 2px;
+            transition: all 0.4s var(--easing);
+        }
+        .menu-btn span:nth-child(1) { top: 10px; }
+        .menu-btn span:nth-child(2) { top: 19px; }
+        .menu-btn span:nth-child(3) { top: 28px; }
+
+        /* メニューオープン時のボタン変化 */
+        .menu-open .menu-btn span:nth-child(1) { transform: rotate(45deg); top: 19px; }
+        .menu-open .menu-btn span:nth-child(2) { opacity: 0; }
+        .menu-open .menu-btn span:nth-child(3) { transform: rotate(-45deg); top: 19px; }
+
+        /* フルスクリーンメニュー */
+        .nav-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(26, 27, 75, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 999;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* 上寄せにする */
+            padding-top: 100px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        .menu-open .nav-overlay {
+            pointer-events: auto;
+            opacity: 1;
+        }
+
+        .nav-list {
+            display: flex;
+            gap: 20px;
+        }
+
+        /* 垂れ下がる演出 */
+        .nav-item {
+            position: relative;
+            text-align: center;
+            width: 80px;
+        }
+
+        /* 紐 (String) */
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            top: -1000px; /* 画面外から */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 1000px;
+            background: linear-gradient(to bottom, transparent, var(--c-gold));
+            transition: top 0.8s var(--easing);
+        }
+
+        /* 飾り (Ornament Image Container) */
+        .nav-link {
+            display: block;
+            position: relative;
+            top: -100vh; /* 初期位置は画面上外 */
+            transition: top 0.8s var(--easing);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .nav-icon {
+            width: 50px;
+            height: auto;
+            margin-bottom: 10px;
+            filter: drop-shadow(0 0 5px var(--c-gold));
+        }
+
+        .nav-text {
+            font-size: 0.9rem;
+            color: var(--c-white);
+            writing-mode: vertical-rl; /* 日本語らしく縦書きにしてみる */
+            text-orientation: upright;
+            letter-spacing: 0.3em;
+        }
+
+        /* メニューオープン時のアニメーション */
+        .menu-open .nav-item::before { top: -850px; /* 紐が降りてくる */ }
+        .menu-open .nav-link { top: 0; }
+
+        /* 各メニューの遅延設定 */
+        .nav-item:nth-child(1) .nav-link, .nav-item:nth-child(1)::before { transition-delay: 0.1s; }
+        .nav-item:nth-child(2) .nav-link, .nav-item:nth-child(2)::before { transition-delay: 0.2s; }
+        .nav-item:nth-child(3) .nav-link, .nav-item:nth-child(3)::before { transition-delay: 0.3s; }
+        .nav-item:nth-child(4) .nav-link, .nav-item:nth-child(4)::before { transition-delay: 0.4s; }
+        .nav-item:nth-child(5) .nav-link, .nav-item:nth-child(5)::before { transition-delay: 0.5s; }
+
+
+        /* =========================================
+           Hero Section
+           ========================================= */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            padding: 20px;
+        }
+
+        .hero-title {
+            font-size: clamp(2rem, 8vw, 5rem);
+            color: var(--c-gold);
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+            line-height: 1.2;
+        }
+
+        .hero-date {
+            font-size: clamp(1.2rem, 4vw, 2rem);
+            letter-spacing: 0.2em;
+            border-top: 1px solid var(--c-gold);
+            border-bottom: 1px solid var(--c-gold);
+            padding: 10px 40px;
+            margin-top: 20px;
+        }
+
+        .scroll-down {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.8rem;
+            opacity: 0.7;
+            animation: bounce 2s infinite;
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateX(-50%) translateY(0);}
+            40% {transform: translateX(-50%) translateY(-10px);}
+            60% {transform: translateX(-50%) translateY(-5px);}
+        }
+
+        /* =========================================
+           Common Layout & Animation
+           ========================================= */
+        .container {
+            width: 90%;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 80px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            color: var(--c-gold);
+            margin-bottom: 10px;
+        }
+
+        .title-decoration {
+            display: block;
+            margin: 0 auto 60px;
+            width: 200px;
+            height: auto;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 1s ease-out;
+        }
+
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+
+        .is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* =========================================
+           About Section
+           ========================================= */
+        .about-text {
+            text-align: center;
+            font-size: 1.1rem;
+            line-height: 2.2;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* =========================================
+           Sticker Rally (Gift Cards)
+           ========================================= */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .gift-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--c-gold);
+            aspect-ratio: 1 / 1; /* 正方形 */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            transition: all 0.4s ease;
+            cursor: default;
+        }
+
+        .gift-card::before {
+            /* 十字のリボン演出（簡易） */
+            content: '';
+            position: absolute;
+            top: 0; left: 50%;
+            width: 1px; height: 100%;
+            background: rgba(212, 175, 55, 0.3);
+            transform: translateX(-50%);
+            z-index: 0;
+        }
+        .gift-card::after {
+            content: '';
+            position: absolute;
+            top: 50%; left: 0;
+            width: 100%; height: 1px;
+            background: rgba(212, 175, 55, 0.3);
+            transform: translateY(-50%);
+            z-index: 0;
+        }
+
+        .gift-card h3 {
+            font-size: 1.5rem;
+            z-index: 1;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .gift-card p {
+            font-size: 0.9rem;
+            color: #aaa;
+            z-index: 1;
+        }
+
+        .gift-card:hover {
+            background: var(--c-gold);
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
+        }
+
+        .gift-card:hover h3, 
+        .gift-card:hover p {
+            color: var(--c-navy);
+        }
+
+        .gift-card:hover::before,
+        .gift-card:hover::after {
+            background: rgba(26, 27, 75, 0.2);
+        }
+
+        /* =========================================
+           Performers & List
+           ========================================= */
+        .performers-list {
+            text-align: center;
+            border: 1px solid var(--c-gold);
+            padding: 40px;
+            position: relative;
+        }
+        .performers-list::before {
+            content: 'Program';
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--c-navy);
+            padding: 0 20px;
+            color: var(--c-gold);
+        }
+        .performers-list li {
+            margin: 15px 0;
+            font-size: 1.2rem;
+            border-bottom: 1px dotted rgba(255,255,255,0.2);
+            padding-bottom: 10px;
+        }
+        .performers-list li:last-child {
+            border-bottom: none;
+        }
+
+        /* =========================================
+           Access & Contact (Maps/Forms)
+           ========================================= */
+        .embed-wrapper {
+            position: relative;
+            width: 100%;
+            border: 1px solid var(--c-gold);
+            padding: 10px;
+            background: rgba(255,255,255,0.05);
+            margin-bottom: 40px;
+        }
+
+        .embed-wrapper iframe {
+            width: 100%;
+            height: 400px;
+            border: none;
+            filter: grayscale(20%) contrast(1.1); /* 少し雰囲気を合わせる */
+        }
+
+        .btn-wrapper {
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .btn-primary {
+            display: inline-block;
+            background-color: var(--c-red);
+            color: var(--c-white);
+            padding: 20px 60px;
+            border-radius: 50px; /* 角丸 */
+            font-size: 1.2rem;
+            letter-spacing: 0.1em;
+            box-shadow: 0 5px 15px rgba(138, 28, 28, 0.4);
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* 光沢エフェクト */
+        .btn-primary::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(to bottom right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0) 100%);
+            transform: rotate(45deg) translateX(-100%);
+            transition: transform 0.6s;
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(138, 28, 28, 0.6);
+        }
+        .btn-primary:hover::after {
+            transform: rotate(45deg) translateX(100%);
+        }
+
+        /* =========================================
+           Footer
+           ========================================= */
+        .footer {
+            text-align: center;
+            padding: 40px 20px;
+            border-top: 1px solid rgba(212, 175, 55, 0.3);
+            font-size: 0.8rem;
+            color: #aaa;
+        }
+
+        /* スマホ用調整 */
+        @media (max-width: 768px) {
+            .nav-list {
+                flex-direction: column; /* スマホでも横並びにする場合はここをrowのまま、gapを調整 */
+                flex-direction: row; 
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 15px;
+            }
+            .nav-item {
+                width: 60px;
+            }
+            .hero-title {
+                margin-bottom: 40px;
+            }
+        }
+    </style>
 </head>
-
 <body>
-    <!--背景用 -->
-    <canvas id="particle-canvas" aria-hidden="true"></canvas>
 
-    <svg class="decor-svg" aria-hidden="true" width="0" height="0">
-        <symbol id="icon-bell" viewBox="0 0 24 24">
-            <path d="M12 22a2 2 0 0 0 2-2H10a2 2 0 0 0 22z"></path>
-            <path d="M18 8a6 6 0 10-12 0v5l-2 2v1h16v-1l-2-2V8z"></path>
-        </symbol>
-        <symbol id="icon-star" viewBox="0 0 24 24">
-            <path
-                d="M12 .587l3.668 7.431L23.6 9.753l-5.8 5.657L19.335 24 12 19.897 4.665 24l1.535-8.59L.4 9.753l7.932-1.735L12 .587z" />
-        </symbol>
-    </svg>
-    <header>
-        <div class="ribbon-wrap" aria-hidden="true">
-            <svg class="ribbon" width="220" height="80" viewBox="0 0 220 80" preserveAspectRatio="xMidYMid meet">
-                <defs>
-                    <linearGradient id="g-gold" x1="0" x2="1">
-                        <stop offset="0%" stop-color="#ffe8a6" />
-                        <stop offset="100%" stop-color="#ffd36b" />
-                    </linearGradient>
-                </defs>
-                <g class="ribbon-group">
-                    <path class="ribbon-left" d="M20 40 C40 25, 60 25, 80 40 L60 50 C40 60, 30 60, 20 50 Z"
-                        fill="url(#g-gold)" stroke="#d7a93a" stroke-width="1" />
-                    <path class="ribbon-right" d="M200 40 C180 25, 160 25, 140 40 L160 50 C180 60, 190 60, 200 50 Z"
-                        fill="url(#g-gold)" stroke="#d7a93a" stroke-width="1" />
-                    <circle cx="110" cy="40" r="20" fill="url(#g-gold)" stroke="#d7a93a" stroke-width="1" />
-                    <path class="ribbon-knot" d="M95 36 Q110 20 125 36 Q110 48 95 36 Z" fill="#ffebe0" opacity="0.85" />
-                </g>
-            </svg>
+    <!-- 背景装飾 -->
+    <div id="bg-canvas"></div>
+    
+    <!-- 画像は images/ フォルダにある想定です。 -->
+    <!-- 実際の画像パスに合わせてください -->
+    <img src="images/sled.png" alt="Sleigh" class="fixed-asset asset-sled">
+    <img src="images/tree.png" alt="Christmas Tree" class="fixed-asset asset-tree">
+
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">Holy Night Gift</div>
+        <div class="menu-btn" id="menuToggle">
+            <span></span>
+            <span></span>
+            <span></span>
         </div>
-        <h1 class="title">クリスマス感謝祭</span></h1>
-        <p class="church">郡山家庭教会</p>
-        <p class="lead">クリスマスパーティーのご案内</p>
-        <p class="lead-sub">今年もクリスマスパーティーを開催します♪<br>ダンス・シールラリー・出し物が盛りだくさん！</p>
-
-        <!-- ベルボタン -->
-        <button id="bell-btn" class="bell-btn" aria-pressed="false" aria-label="ベルを鳴らす">
-            <svg class="bell-icon" width="28" height="28" viewBox="0 0 24 24" aria-hidden="true">
-                <use href="#icon-bell"></use>
-            </svg>
-            <span class="bell-text">ベルを鳴らす</span>
-        </button>
     </header>
-    <main>
-        <section class="date-section reveal-on-scroll">
-            <div class="date-card">
-                <h2 class="date">12月21日<small>日</small></h2>
-                <p class="time">一部 10:00〜 記念礼拝<br>二部 11:00〜 感謝祭</p>
-            </div>
-        </section>
-        <section class="seal-section reveal-on-scroll">
-            <div class="panel">
-                <h3 class="section-title">シールラリー</h3>
-                <p class="note">全部揃えると景品もらえる！</p>
 
-                <div class="seal-grid">
-                    <div class="seal-item">
-                        <div class="si-label">焼鳥</div>
-                        <div class="si-sub">玄関外</div>
-                    </div>
-                    <div class="seal-item">
-                        <div class="si-label">チヂミ</div>
-                        <div class="si-sub">玄関外</div>
-                    </div>
-                    <div class="seal-item">
-                        <div class="si-label">おにぎり</div>
-                        <div class="si-sub">第一講義室</div>
-                    </div>
-                    <div class="seal-item">
-                        <div class="si-label">ナゲット</div>
-                        <div class="si-sub">第二講義室</div>
-                    </div>
-                    <div class="seal-item">
-                        <div class="si-label">パネル展</div>
-                        <div class="si-sub">第三講義室</div>
-                    </div>
-                    <div class="seal-item">
-                        <div class="si-label">ケーキ</div>
-                        <div class="si-sub">カフェ</div>
-                    </div>
+    <!-- Navigation Overlay -->
+    <nav class="nav-overlay" id="navOverlay">
+        <ul class="nav-list">
+            <!-- 各リストアイテムは「天井からの紐」と「飾り（リンク）」 -->
+            <li class="nav-item">
+                <a href="#hero" class="nav-link">
+                    <!-- オーナメント画像の例。images/nav_1.png を使用 -->
+                    <img src="images/nav_1.png" alt="" class="nav-icon">
+                    <span class="nav-text">Top</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#about" class="nav-link">
+                    <img src="images/nav_2.png" alt="" class="nav-icon">
+                    <span class="nav-text">About</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#rally" class="nav-link">
+                    <img src="images/nav_3.png" alt="" class="nav-icon">
+                    <span class="nav-text">Event</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#access" class="nav-link">
+                    <img src="images/nav_4.png" alt="" class="nav-icon">
+                    <span class="nav-text">Access</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#contact" class="nav-link">
+                    <img src="images/nav_5.png" alt="" class="nav-icon">
+                    <span class="nav-text">Form</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Hero -->
+    <section id="hero" class="hero">
+        <h1 class="hero-title">クリスマス<br>感謝祭</h1>
+        <div class="hero-date">12.21 Sun 10:00~</div>
+        <div class="scroll-down">SCROLL</div>
+    </section>
+
+    <!-- About -->
+    <section id="about" class="container">
+        <div class="fade-in-up">
+            <h2 class="section-title">About</h2>
+            <!-- 装飾バー -->
+            <img src="images/bar.png" alt="decoration" class="title-decoration">
+            <p class="about-text">
+                今年もクリスマスパーティーを開催します♪<br>
+                ダンスなどの出し物や、シールラリーなどイベントが盛りだくさん！<br>
+                大人も子供も楽しめる、幻想的な聖夜のひとときをお届けします。<br>
+                ぜひご参加ください。
+            </p>
+        </div>
+    </section>
+
+    <!-- Sticker Rally (Gift Boxes) -->
+    <section id="rally" class="container">
+        <div class="fade-in-up">
+            <h2 class="section-title">Sticker Rally</h2>
+            <img src="images/bar.png" alt="decoration" class="title-decoration">
+            <p style="text-align: center; margin-bottom: 20px;">全部揃えると素敵な景品プレゼント！</p>
+            
+            <div class="card-grid">
+                <div class="gift-card">
+                    <h3>焼鳥</h3>
+                    <p>玄関外</p>
+                </div>
+                <div class="gift-card">
+                    <h3>チヂミ</h3>
+                    <p>玄関外</p>
+                </div>
+                <div class="gift-card">
+                    <h3>おにぎり</h3>
+                    <p>第一講義室</p>
+                </div>
+                <div class="gift-card">
+                    <h3>ナゲット</h3>
+                    <p>第二講義室</p>
+                </div>
+                <div class="gift-card">
+                    <h3>パネル展</h3>
+                    <p>第三講義室</p>
+                </div>
+                <div class="gift-card">
+                    <h3>ケーキ</h3>
+                    <p>カフェ</p>
                 </div>
             </div>
-        </section>
-        <section class="program-section reveal-on-scroll">
-            <div class="panel">
-                <h3 class="section-title">【出し物】</h3>
-                <ul class="program-list">
-                    <li>聖歌隊</li>
-                    <li>活動動画</li>
-                    <li>ダンス</li>
-                    <li>バンド</li>
-                    <li>その他出し物</li>
-                </ul>
+        </div>
+    </section>
+
+    <!-- Performers -->
+    <section id="performers" class="container">
+        <div class="fade-in-up">
+            <h2 class="section-title">Performers</h2>
+            <img src="images/bar.png" alt="decoration" class="title-decoration">
+            
+            <ul class="performers-list">
+                <li>聖歌隊 活動動画</li>
+                <li>ダンス 出し物</li>
+                <li>バンド演奏</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Access (Google Map) -->
+    <section id="access" class="container">
+        <div class="fade-in-up">
+            <h2 class="section-title">Access</h2>
+            <img src="images/bar.png" alt="decoration" class="title-decoration">
+            
+            <div class="embed-wrapper">
+                <!-- ここにGoogle Mapの埋め込みコードを貼ってください -->
+                <!-- 例: 郡山家庭教会の地図 -->
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3167.0!2d140.3!3d37.4!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzfCsDI0JzAwLjAiTiAxNDDCsDE4JzAwLjAiRQ!5e0!3m2!1sja!2sjp!4v1600000000000!5m2!1sja!2sjp" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
             </div>
-        </section>
-        <section class="access-section reveal-on-scroll">
-            <div class="panel access-grid">
-                <div class="map-wrap">
-                    <h3 class="section-title">アクセス</h3>
-                    <img src="map-placeholder.png" alt="地図（サンプル）" class="map-img" onerror="this.style.display='none'">
-                    <p class="addr">住所：郡山市大槻町堀切西11-3<br>TEL：024-927-1670</p>
-                </div>
-                <div class="poster-wrap" aria-hidden="true">
-                    <!-- 元チラシ画像がある場合に表示 -->
-                    <img src="poster_br.jpg" alt="イベントチラシ" class="poster" onerror="this.style.display='none'">
-                    <!-- SVGツリー（装飾） -->
-                </div>
+            <p style="text-align: center;">
+                郡山市大槻町堀切西11-3<br>
+                TEL: 024-927-1670
+            </p>
+        </div>
+    </section>
+
+    <!-- Contact (Google Form) -->
+    <section id="contact" class="container">
+        <div class="fade-in-up">
+            <h2 class="section-title">Contact</h2>
+            <img src="images/bar.png" alt="decoration" class="title-decoration">
+            
+            <p style="text-align: center; margin-bottom: 20px;">
+                参加ご希望の方は以下のフォームよりお申し込みください。
+            </p>
+
+            <div class="embed-wrapper">
+                <!-- ここにGoogle Formの埋め込みコードを貼ってください -->
+                <!-- 仮のiframe -->
+                <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSdxxxxxxxxxxxxxxxxxxx/viewform?embedded=true" width="640" height="500" frameborder="0" marginheight="0" marginwidth="0">読み込んでいます…</iframe>
             </div>
-        </section>
-    </main>
-    <footer class="site-footer">
-        <p>主催：世界平和統一家庭連合 郡山家庭教会</p>
-        <p class="subtle"></p>
+
+            <div class="btn-wrapper">
+                <a href="#" class="btn-primary">申し込みはこちら</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>主催: 世界平和統一家庭連合 郡山家庭教会</p>
+        <p>&copy; 2024 Christmas Event. All Rights Reserved.</p>
     </footer>
 
-    <script src="js/script.js"></script>
-</body>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            /* =========================================
+               1. 星の生成とアニメーション
+               ========================================= */
+            const bgCanvas = document.getElementById('bg-canvas');
+            const starCount = 50; // 星の数
+            const starImages = ['images/star_1.png', 'images/star_2.png'];
 
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('img');
+                // ランダムに画像を選択（画像がない場合はdivで代用するロジックを入れても良い）
+                star.src = starImages[Math.floor(Math.random() * starImages.length)];
+                star.classList.add('star');
+                
+                // 位置をランダムに
+                const x = Math.random() * 100;
+                const y = Math.random() * 100;
+                
+                // サイズをランダムに
+                const size = Math.random() * 20 + 10; // 10px ~ 30px
+                
+                // アニメーションの遅延
+                const delay = Math.random() * 5;
+                const duration = Math.random() * 3 + 2;
+
+                star.style.left = `${x}%`;
+                star.style.top = `${y}%`;
+                star.style.width = `${size}px`;
+                star.style.animationDelay = `${delay}s`;
+                star.style.animationDuration = `${duration}s`;
+
+                // 画像が読み込めない場合のフォールバック（黄色い丸）
+                star.onerror = function() {
+                    this.style.display = 'none'; // 画像がない場合は非表示にするか、CSSで丸を描く
+                };
+
+                bgCanvas.appendChild(star);
+            }
+
+            /* =========================================
+               2. ナビゲーションメニューの制御
+               ========================================= */
+            const menuBtn = document.getElementById('menuToggle');
+            const navOverlay = document.getElementById('navOverlay');
+            const navLinks = document.querySelectorAll('.nav-link');
+
+            menuBtn.addEventListener('click', () => {
+                document.body.classList.toggle('menu-open');
+            });
+
+            // リンクをクリックしたらメニューを閉じる
+            navLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    document.body.classList.remove('menu-open');
+                });
+            });
+
+            /* =========================================
+               3. スクロールアニメーション (Intersection Observer)
+               ========================================= */
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.15
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        
+                        // bar.pngのアニメーションもここでトリガー
+                        const bar = entry.target.querySelector('.title-decoration');
+                        if(bar) {
+                            bar.style.opacity = '1';
+                            bar.style.transform = 'translateY(0)';
+                        }
+                    }
+                });
+            }, observerOptions);
+
+            const fadeElements = document.querySelectorAll('.fade-in-up');
+            fadeElements.forEach(el => observer.observe(el));
+        });
+    </script>
+</body>
 </html>
