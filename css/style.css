@@ -389,6 +389,9 @@ img {
 /* =========================================
    Sticker Rally (Gift Cards)
    ========================================= */
+/* =========================================
+   Sticker Rally (Gift Box Design Redone)
+   ========================================= */
 .card-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -396,71 +399,124 @@ img {
     margin-top: 40px;
 }
 
+/* 
+   箱（ベース）のデザイン 
+   - 深いネイビーの背景
+   - 太いリボンを擬似要素で作るための基準点
+*/
 .gift-card {
-    background: rgba(255, 255, 255, 0.05); /* 背景を少し濃く */
-    border: 1px solid var(--c-gold);
+    background-color: #2a2b55; /* 要件: 深いネイビー */
+    border-radius: 8px; /* 少し角を丸くして箱らしく */
     aspect-ratio: 1 / 1;
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
     position: relative;
-    transition: all 0.4s ease;
-    cursor: default;
-    backdrop-filter: blur(2px); /* 星が透けすぎないように */
+    overflow: hidden; /* リボンがはみ出ないように */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4); /* 影で立体感 */
+    transition: transform 0.4s var(--easing), box-shadow 0.4s var(--easing);
+    border: 1px solid rgba(255, 255, 255, 0.1); /* 輪郭を少し強調 */
 }
 
+/* 
+   リボンのデザイン (太さ20px)
+   ::before -> 縦のリボン
+   ::after  -> 横のリボン
+*/
 .gift-card::before {
     content: '';
     position: absolute;
     top: 0; left: 50%;
-    width: 1px; height: 100%;
-    background: var(--c-gold-fade);
+    width: 20px; height: 100%;
+    background: linear-gradient(to right, #b8860b, #d4af37, #b8860b); /* ゴールドの光沢感 */
     transform: translateX(-50%);
-    z-index: 0;
+    z-index: 1;
 }
+
 .gift-card::after {
     content: '';
     position: absolute;
     top: 50%; left: 0;
-    width: 100%; height: 1px;
-    background: var(--c-gold-fade);
+    width: 100%; height: 20px;
+    background: linear-gradient(to bottom, #b8860b, #d4af37, #b8860b);
     transform: translateY(-50%);
-    z-index: 0;
+    z-index: 1;
 }
 
-.gift-card h3 {
-    font-size: 1.5rem;
-    z-index: 1;
-    margin-bottom: 10px;
+/* 
+   中央のラベル（白いカード）
+   - リボン(z-index:1)の上に配置するため z-index:2
+*/
+.card-label {
+    position: relative;
+    z-index: 2;
+    background-color: #fdfdfd; /* オフホワイト */
+    width: 70%;
+    height: 60%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3); /* カード自体の影 */
+    border: 1px solid #eee;
+    padding: 15px;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+/* 
+   ラベル上部の装飾（結び目/留め具イメージ）
+   - ゴールドのダイヤ型を配置
+*/
+.card-label::before {
+    content: '';
+    position: absolute;
+    top: -8px; /* ラベルの上に飛び出させる */
+    left: 50%;
+    width: 16px; height: 16px;
+    background: #d4af37;
+    transform: translateX(-50%) rotate(45deg); /* ダイヤ型 */
+    border: 2px solid #fff; /* 白枠で区切る */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+/* 
+   テキストデザイン
+   - 白背景なので濃い色にする
+*/
+.card-label h3 {
+    font-size: 1.4rem;
+    color: #2a2b55; /* ベース色と合わせる */
+    margin-bottom: 8px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    width: 100%;
+    text-align: center;
+    border-bottom: 2px solid #d4af37; /* 見出しの下にゴールドの線 */
+    padding-bottom: 5px;
+}
+
+.card-label p {
+    font-size: 0.9rem;
+    color: #555; /* 少しグレーにして階層を作る */
     font-weight: 500;
-    text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
+    margin-top: 5px;
 }
 
-.gift-card p {
-    font-size: 0.95rem;
-    color: #ccc;
-    z-index: 1;
-    font-weight: 300;
-}
-
+/* 
+   ホバーエフェクト
+*/
 .gift-card:hover {
-    background: var(--c-gold);
-    transform: translateY(-10px);
-    box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
+    transform: translateY(-10px); /* 浮き上がる */
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5); /* 影を濃く */
 }
 
-.gift-card:hover h3, 
-.gift-card:hover p {
-    color: var(--c-navy);
-    text-shadow: none;
+/* ホバー時にラベルを少し装飾 */
+.gift-card:hover .card-label {
+    background-color: #fff; /* より真っ白に */
+    transform: scale(1.05); /* 少し大きく */
+    box-shadow: 0 8px 15px rgba(212, 175, 55, 0.4); /* ゴールドの輝き */
+    border-color: #d4af37;
 }
-
-.gift-card:hover::before,
-.gift-card:hover::after {
-    background: rgba(26, 27, 75, 0.2);
-}
-
 /* =========================================
    Performers & List
    ========================================= */
