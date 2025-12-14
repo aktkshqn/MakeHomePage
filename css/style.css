@@ -654,11 +654,11 @@ img {
        V字のようなリズムで、隣同士の高さに変化をつける
     */
     .nav-item:nth-child(1) { margin-top: 0px; }
-    .nav-item:nth-child(2) { margin-top: 40px; } /* 真ん中を下げる */
+    .nav-item:nth-child(2) { margin-top: 35px; } /* 真ん中を下げる */
     .nav-item:nth-child(3) { margin-top: 0px; }
     
     .nav-item:nth-child(4) { margin-top: 20px; } /* 2行目は少しずらす */
-    .nav-item:nth-child(5) { margin-top: 60px; }
+    .nav-item:nth-child(5) { margin-top: -40px; }
 
     /* スマホ用に余白調整 */
     .nav-overlay {
