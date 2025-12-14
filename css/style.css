@@ -81,8 +81,8 @@ img {
     z-index: -1;
     transition: transform 0.2s ease-out;
 }
-.asset-sled { bottom: 5%; left: -50px; width: 300px; }
-.asset-tree { bottom: 0; right: -50px; width: 250px; }
+.asset-sled { top: 15%; left: -100px; width: 300px; }
+.asset-tree { bottom: 0; right: -100px; width: 250px; }
 
 @media (min-width: 768px) {
     .asset-sled { width: 500px; left: 0; }
