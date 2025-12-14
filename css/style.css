@@ -158,12 +158,14 @@ img {
     z-index: 999;
     display: flex;
     justify-content: center;
-    /* 上端揃えにして、margin-topで段差を作る */
+    /* 上寄せ */
     align-items: flex-start; 
-    padding-top: 120px; /* ヘッダー分 + 余白 */
+    padding-top: 100px;
+    padding-bottom: 50px;
     pointer-events: none;
     opacity: 0;
     transition: opacity 0.5s;
+    overflow-y: auto; 
 }
 
 .menu-open .nav-overlay {
@@ -174,20 +176,29 @@ img {
 /* リストコンテナ */
 .nav-list {
     display: flex;
-    gap: 20px; /* 横の間隔 */
-    justify-content: center;
+    flex-wrap: wrap; /* 折り返しを許可 */
+    
+    /* 【重要】隙間配置の肝: 中央揃えにすることで下の行が上の隙間に来る */
+    justify-content: center; 
+    
+    /* PC表示時のベース設定 */
+    width: 100%;
+    max-width: 1000px;
+    
+    /* 【重要】行間の隙間を大きく取り、紐の重なりを防ぐ */
+    gap: 100px 40px; /* 縦100px, 横40px */
 }
 
-/* 個別のアイテムエリア（位置調整用） */
+/* 個別のアイテムエリア */
 .nav-item {
     position: relative;
-    width: 80px;
+    width: 80px; /* PCでの基本幅 */
     text-align: center;
 }
 
 /* 
-   紐の長さ（段差）の演出 
-   PC表示: 綺麗な右肩下がり（階段状）
+   紐の長さ（段差）の演出: PC用
+   右肩下がりのリズムを作る
 */
 .nav-item:nth-child(1) { margin-top: 0px; }
 .nav-item:nth-child(2) { margin-top: 50px; }
@@ -198,25 +209,25 @@ img {
 /* リンク本体（動く部分） */
 .nav-link {
     display: flex;
-    flex-direction: column; /* 縦並び (テキスト→アイコン) */
+    flex-direction: column;
     align-items: center;
     position: relative;
     text-decoration: none;
     
-    /* 初期状態: 画面の遥か上に隠す */
+    /* 初期状態: 天井裏へ */
     transform: translateY(-150vh);
-    transition: transform 1s var(--easing); /* バウンス効果 */
+    transition: transform 1s var(--easing);
 }
 
-/* 紐 (String) - リンクの上部から天井へ伸びる */
+/* 紐 (String) */
 .nav-link::before {
     content: '';
     position: absolute;
-    bottom: 100%; /* コンテンツの真上から開始 */
+    bottom: 100%;
     left: 50%;
     transform: translateX(-50%);
     width: 1px;
-    height: 200vh; /* 十分な長さを確保 */
+    height: 200vh; /* 長めに確保 */
     background: linear-gradient(to bottom, transparent 20%, var(--c-gold) 100%);
     opacity: 0.6;
 }
@@ -227,14 +238,14 @@ img {
     color: var(--c-gold);
     letter-spacing: 0.1em;
     font-weight: 500;
-    margin-bottom: 15px; /* 紐とアイコンの間隔 */
-    writing-mode: horizontal-tb; /* 横書き指定 */
+    margin-bottom: 15px;
+    writing-mode: horizontal-tb;
     text-shadow: 0 0 5px rgba(212, 175, 55, 0.5);
 }
 
 /* アイコンスタイル */
 .nav-icon {
-    width: 50px; /* 必要に応じてサイズ調整 */
+    width: 50px;
     height: auto;
     filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.6));
     transition: transform 0.3s;
@@ -249,20 +260,19 @@ img {
 }
 
 /* =========================================
-   Animation Triggers (Open State)
+   Animation Triggers
    ========================================= */
-
-/* メニューが開いた時、定位置まで降りてくる */
 .menu-open .nav-link {
     transform: translateY(0);
 }
 
-/* アニメーションの遅延 (左から順にパラパラと) */
+/* アニメーション遅延 */
 .nav-item:nth-child(1) .nav-link { transition-delay: 0.05s; }
-.nav-item:nth-child(2) .nav-link { transition-delay: 0.15s; }
-.nav-item:nth-child(3) .nav-link { transition-delay: 0.25s; }
-.nav-item:nth-child(4) .nav-link { transition-delay: 0.35s; }
-.nav-item:nth-child(5) .nav-link { transition-delay: 0.45s; }
+.nav-item:nth-child(2) .nav-link { transition-delay: 0.1s; }
+.nav-item:nth-child(3) .nav-link { transition-delay: 0.15s; }
+.nav-item:nth-child(4) .nav-link { transition-delay: 0.2s; }
+.nav-item:nth-child(5) .nav-link { transition-delay: 0.25s; }
+
 
 /* =========================================
    Hero Section
@@ -567,24 +577,32 @@ img {
 }
 
 /* スマホ用調整 */
-@media (max-width: 768px) {
+@media (max-width: 768px){
     .nav-list {
-        flex-wrap: wrap; /* 2列などで折り返す */
-        gap: 15px;
+        /* スマホ画面幅に合わせて調整 */
         width: 100%;
-        max-width: 350px; /* スマホでの横幅制限 */
+        max-width: 400px; /* コンテンツが広がりすぎないように制限 */
+        
+        /* 紐が被らないよう、縦の隙間をしっかり確保 */
+        gap: 90px 2%; 
     }
 
     .nav-item {
-        width: 45%; /* 2列並びにする */
+        /* 【重要】1行に3つ並ぶ計算 (30% * 3 + gap < 100%) */
+        width: 31%; 
     }
 
     /* 
-       スマホでは段差が大きすぎると見づらいため、
-       交互に高さが変わる「ジグザグ」配置に変更 
+       スマホ用の段差演出 (上3つ、下2つ配置用)
+       PC用の大きな margin-top だと2行目が遠くなりすぎるため微調整
+       V字のようなリズムで、隣同士の高さに変化をつける
     */
-    .nav-item:nth-child(odd) { margin-top: 0px; }
-    .nav-item:nth-child(even) { margin-top: 60px; }
+    .nav-item:nth-child(1) { margin-top: 0px; }
+    .nav-item:nth-child(2) { margin-top: 40px; } /* 真ん中を下げる */
+    .nav-item:nth-child(3) { margin-top: 0px; }
+    
+    .nav-item:nth-child(4) { margin-top: 20px; } /* 2行目は少しずらす */
+    .nav-item:nth-child(5) { margin-top: 60px; }
 
     /* スマホ用に余白調整 */
     .nav-overlay {
